@@ -510,7 +510,7 @@ ChannelMention
  */
 BigEmoji = (EndOfLine / Space)* es:(@(Emoji / Emoticon) (EndOfLine / Space)*) |1..3| { return [bigEmoji(es)]; }
 
-Emoji = EmojiShortCode / ch:UnicodeEmoji { return emojiUnicode(ch); }
+Emoji = EmojiShortCode / ZwjSequence / ch:UnicodeEmoji { return emojiUnicode(ch); } 
 
 EmojiShortCode = ":" shortCode:EmojiShortCodeName ":" { return emoji(shortCode); }
 
@@ -591,6 +591,10 @@ EmoticonPattern
     }
 
 /* Unicode emojis */
+
+ZwjSequence = seq:$( UnicodeEmoji UnicodeEmojiMiscellaneousSymbolsAndPictographsFitzpatrickModifiers?
+  [\u200D] UnicodeEmoji) { return emojiUnicode(seq)}
+
 UnicodeEmoji
   = UnicodeEmojiEmoticon
   / $(
